@@ -74,6 +74,20 @@ for sem in sorted(d for d in os.listdir(ROOT) if re.fullmatch(r'\d-\d', d)):
         items.sort(key=lambda x: (x['kind'] != 'guide', x['num'] or 0, x['title'].lower()))
         data.append({'id': course, 'code': code, 'name': name, 'term': SEMESTERS.get(sem, sem), 'items': items})
 
+# a "back to the course" link at the top of every interactive guide's drawer (idempotent)
+BACK = '''<!--cwd-back--><style>.nav a.cwd-back{min-height:40px;margin:0 0 8px;color:var(--primary);font-weight:500}</style>
+<script>(function(){var n=document.getElementById('nav');if(!n)return;var a=document.createElement('a');
+a.className='cwd-back ripple';a.href='../../index.html#/%s';
+a.innerHTML='<svg class="ic" viewBox="0 -960 960 960" aria-hidden="true"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg><span class="lbl">%s</span>';
+n.insertBefore(a,n.firstChild);})();</script>'''
+for c in data:
+    for it in c['items']:
+        if it['kind'] != 'guide': continue
+        path = os.path.join(ROOT, it['href']); h = open(path).read()
+        h = re.sub(r'<!--cwd-back-->.*?</script>', '', h, flags=re.S)
+        i = h.rindex('</body>')
+        open(path, 'w').write(h[:i] + BACK % (c['id'], html.escape(c['name'])) + '\n' + h[i:])
+
 tpl = open(os.path.join(ROOT, 'index.template.html')).read()
 open(os.path.join(ROOT, 'index.html'), 'w').write(tpl.replace('/*DATA*/[]', json.dumps(data, ensure_ascii=False)))
 print('index.html:', ', '.join('%s (%d)' % (c['code'], len(c['items'])) for c in data))
