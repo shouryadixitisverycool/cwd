@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>cwd</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,300..1000&display=swap">
+<style>
+/* Material 3 dark, the same tokens as the study guides */
+:root{
+  --surface:#131314; --s-lowest:#0e0e0f; --s-low:#1b1b1c; --s:#1f2021; --s-high:#2a2a2b; --s-highest:#353536;
+  --on:#e3e3e3; --on-var:#c4c7c5; --outline:#8e918f; --outline-var:#444746;
+  --primary:#a8c7fa; --on-primary:#062e6f; --sec-cont:#2b3a4f; --on-sec-cont:#d3e3fd;
+  --r-s:8px; --r-m:12px; --r-l:16px; --r-xl:28px;
+  --emph:cubic-bezier(.2,0,0,1); --emph-dec:cubic-bezier(.05,.7,.1,1);
+  --font:"Roboto Flex",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+@supports (corner-shape:squircle){ :root{--r-s:14px;--r-m:20px;--r-l:26px;--r-xl:44px} }
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--surface);color:var(--on);font:400 16px/1.5 var(--font);letter-spacing:.01em;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.card,.back,.num{corner-shape:squircle}
+:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
+main{max-width:1000px;margin:0 auto;padding:0 24px 80px}
+
+/* state layers + ripple */
+.ripple{position:relative;overflow:hidden;isolation:isolate}
+.ripple::before{content:"";position:absolute;inset:0;background:currentColor;opacity:0;transition:opacity .2s;z-index:-1;pointer-events:none}
+.ripple:hover::before{opacity:.08} .ripple:active::before{opacity:.12}
+.rip{position:absolute;border-radius:50%;background:currentColor;opacity:.14;transform:scale(0);pointer-events:none;z-index:-1;animation:rip .6s var(--emph) forwards}
+@keyframes rip{to{transform:scale(1);opacity:0}}
+
+/* home hero */
+.hero{text-align:center;padding:120px 0 72px}
+.mark{font:900 128px/1 var(--font);font-variation-settings:"wdth" 151,"opsz" 144;letter-spacing:-.045em;margin:0;color:#e3e9ff}
+.tag{margin:18px 0 0;color:var(--on-var);font-size:16px}
+
+/* section head */
+.head{display:flex;align-items:baseline;justify-content:space-between;margin:0 4px 14px}
+.head h2{font:500 14px/20px var(--font);letter-spacing:.01em;margin:0;color:var(--on)}
+.head span{font-size:14px;color:var(--outline)}
+
+/* cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:36px}
+.card{display:flex;flex-direction:column;gap:4px;background:var(--s-low);border-radius:var(--r-xl);padding:20px 22px 20px;min-height:116px;
+  color:var(--on);transition:background .3s var(--emph)}
+.card:hover{background:var(--s)}
+.over{font:500 12.5px/16px var(--font);letter-spacing:.06em;color:var(--primary);text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.over .ic{width:16px;height:16px}
+.title{font:400 18px/24px var(--font);color:var(--on);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.meta{margin-top:auto;padding-top:8px;font-size:13.5px;color:var(--on-var)}
+.card.pdf .over{color:var(--on-var)}
+.ic{width:20px;height:20px;fill:currentColor;flex:none}
+
+/* course page */
+.top{padding:40px 0 8px}
+.back{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px 0 12px;border-radius:var(--r-m);color:var(--primary);font:500 14px/20px var(--font)}
+.ph{margin:36px 4px 36px}
+.ph .over{margin-bottom:8px}
+.ph h1{font:400 40px/48px var(--font);letter-spacing:-.01em;margin:0}
+.ph p{margin:8px 0 0;color:var(--on-var)}
+.num{display:inline-grid;place-items:center;min-width:26px;height:26px;padding:0 6px;border-radius:var(--r-s);background:var(--primary);color:var(--on-primary);font:600 12.5px/1 var(--font);letter-spacing:0}
+.view{animation:enter .45s var(--emph-dec)}
+@keyframes enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+footer{color:var(--outline);font-size:13px;text-align:center;margin-top:24px}
+@media (max-width:600px){ .hero{padding:72px 0 48px} .mark{font-size:88px} .ph h1{font-size:30px;line-height:38px} }
+@media (prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important} }
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+const DATA=/*DATA*/[];
+const P={
+  back:'m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z',
+  guide:'M240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h480q33 0 56.5 23.5T800-800v640q0 33-23.5 56.5T720-80H240Zm0-80h480v-640h-80v280l-100-60-100 60v-280H240v640Z',
+  pdf:'M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520Z'
+};
+const ic=n=>'<svg class="ic" viewBox="0 -960 960 960" aria-hidden="true"><path d="'+P[n]+'"/></svg>';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const app=document.getElementById('app');
+
+function home(){
+  const n=DATA.reduce((a,c)=>a+c.items.length,0);
+  return '<section class="hero"><h1 class="mark">cwd</h1><p class="tag">Study guides, question maps and solved papers</p></section>'
+    +'<div class="head"><h2>Courses</h2><span>'+DATA.length+' courses · '+n+' files</span></div>'
+    +'<div class="grid">'+DATA.map(c=>'<a class="card ripple" href="#/'+encodeURIComponent(c.id)+'">'
+      +'<span class="over">'+esc(c.code)+'</span><span class="title">'+esc(c.name)+'</span>'
+      +'<span class="meta">'+esc(c.term)+' · '+c.items.length+' files</span></a>').join('')+'</div>';
+}
+function card(it){
+  const over=it.kind==='guide'?(it.num?'<span class="num">'+it.num+'</span>':ic('guide'))+esc(it.over):ic('pdf')+'PDF';
+  return '<a class="card ripple '+it.kind+'" href="'+encodeURI(it.href)+'"'+(it.kind==='pdf'?' target="_blank" rel="noopener"':'')+'>'
+    +'<span class="over">'+over+'</span><span class="title">'+esc(it.title)+'</span><span class="meta">'+esc(it.meta)+'</span></a>';
+}
+function course(c){
+  const g=c.items.filter(i=>i.kind==='guide'), p=c.items.filter(i=>i.kind!=='guide');
+  let h='<div class="top"><a class="back ripple" href="#/">'+ic('back')+'All courses</a></div>'
+    +'<header class="ph"><div class="over">'+esc(c.code)+' · '+esc(c.term)+'</div><h1>'+esc(c.name)+'</h1><p>'+c.items.length+' files</p></header>';
+  if(g.length) h+='<div class="head"><h2>Chapters</h2><span>'+g.length+' interactive guides</span></div><div class="grid">'+g.map(card).join('')+'</div>';
+  if(p.length) h+='<div class="head"><h2>'+(g.length?'More material':'Files')+'</h2><span>'+p.length+' PDFs</span></div><div class="grid">'+p.map(card).join('')+'</div>';
+  return h;
+}
+function route(){
+  const id=decodeURIComponent(location.hash.replace(/^#\/?/,''));
+  const c=DATA.find(x=>x.id===id);
+  app.innerHTML='<div class="view">'+(c?course(c):home())+'</div>';
+  document.title=c?c.code+' · cwd':'cwd';
+  window.scrollTo(0,0);
+}
+addEventListener('hashchange',route); route();
+document.addEventListener('pointerdown',e=>{ const t=e.target.closest('.ripple'); if(!t) return;
+  const r=t.getBoundingClientRect(), d=Math.max(r.width,r.height)*2.2, s=document.createElement('span');
+  s.className='rip'; s.style.cssText='width:'+d+'px;height:'+d+'px;left:'+(e.clientX-r.left-d/2)+'px;top:'+(e.clientY-r.top-d/2)+'px';
+  t.appendChild(s); setTimeout(()=>s.remove(),650); });
+</script>
+</body>
+</html>

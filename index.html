@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>cwd</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,300..1000&display=swap">
+<style>
+/* Material 3 dark, the same tokens as the study guides */
+:root{
+  --surface:#131314; --s-lowest:#0e0e0f; --s-low:#1b1b1c; --s:#1f2021; --s-high:#2a2a2b; --s-highest:#353536;
+  --on:#e3e3e3; --on-var:#c4c7c5; --outline:#8e918f; --outline-var:#444746;
+  --primary:#a8c7fa; --on-primary:#062e6f; --sec-cont:#2b3a4f; --on-sec-cont:#d3e3fd;
+  --r-s:8px; --r-m:12px; --r-l:16px; --r-xl:28px;
+  --emph:cubic-bezier(.2,0,0,1); --emph-dec:cubic-bezier(.05,.7,.1,1);
+  --font:"Roboto Flex",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+@supports (corner-shape:squircle){ :root{--r-s:14px;--r-m:20px;--r-l:26px;--r-xl:44px} }
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--surface);color:var(--on);font:400 16px/1.5 var(--font);letter-spacing:.01em;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.card,.back,.num{corner-shape:squircle}
+:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
+main{max-width:1000px;margin:0 auto;padding:0 24px 80px}
+
+/* state layers + ripple */
+.ripple{position:relative;overflow:hidden;isolation:isolate}
+.ripple::before{content:"";position:absolute;inset:0;background:currentColor;opacity:0;transition:opacity .2s;z-index:-1;pointer-events:none}
+.ripple:hover::before{opacity:.08} .ripple:active::before{opacity:.12}
+.rip{position:absolute;border-radius:50%;background:currentColor;opacity:.14;transform:scale(0);pointer-events:none;z-index:-1;animation:rip .6s var(--emph) forwards}
+@keyframes rip{to{transform:scale(1);opacity:0}}
+
+/* home hero */
+.hero{text-align:center;padding:120px 0 72px}
+.mark{font:900 128px/1 var(--font);font-variation-settings:"wdth" 151,"opsz" 144;letter-spacing:-.045em;margin:0;color:#e3e9ff}
+.tag{margin:18px 0 0;color:var(--on-var);font-size:16px}
+
+/* section head */
+.head{display:flex;align-items:baseline;justify-content:space-between;margin:0 4px 14px}
+.head h2{font:500 14px/20px var(--font);letter-spacing:.01em;margin:0;color:var(--on)}
+.head span{font-size:14px;color:var(--outline)}
+
+/* cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:36px}
+.card{display:flex;flex-direction:column;gap:4px;background:var(--s-low);border-radius:var(--r-xl);padding:20px 22px 20px;min-height:116px;
+  color:var(--on);transition:background .3s var(--emph)}
+.card:hover{background:var(--s)}
+.over{font:500 12.5px/16px var(--font);letter-spacing:.06em;color:var(--primary);text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.over .ic{width:16px;height:16px}
+.title{font:400 18px/24px var(--font);color:var(--on);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.meta{margin-top:auto;padding-top:8px;font-size:13.5px;color:var(--on-var)}
+.card.pdf .over{color:var(--on-var)}
+.ic{width:20px;height:20px;fill:currentColor;flex:none}
+
+/* course page */
+.top{padding:40px 0 8px}
+.back{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px 0 12px;border-radius:var(--r-m);color:var(--primary);font:500 14px/20px var(--font)}
+.ph{margin:36px 4px 36px}
+.ph .over{margin-bottom:8px}
+.ph h1{font:400 40px/48px var(--font);letter-spacing:-.01em;margin:0}
+.ph p{margin:8px 0 0;color:var(--on-var)}
+.num{display:inline-grid;place-items:center;min-width:26px;height:26px;padding:0 6px;border-radius:var(--r-s);background:var(--primary);color:var(--on-primary);font:600 12.5px/1 var(--font);letter-spacing:0}
+.view{animation:enter .45s var(--emph-dec)}
+@keyframes enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+footer{color:var(--outline);font-size:13px;text-align:center;margin-top:24px}
+@media (max-width:600px){ .hero{padding:72px 0 48px} .mark{font-size:88px} .ph h1{font-size:30px;line-height:38px} }
+@media (prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important} }
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+const DATA=[{"id": "AAD", "code": "AAD", "name": "Algorithm Analysis and Design", "term": "Monsoon · Year 2", "items": [{"href": "2-1/AAD/AAD-post-midsem-endsem-question-map.pdf", "title": "End-sem question map (post-mid-sem, Lec 14–24)", "kind": "pdf", "over": "PDF", "meta": "30 pages", "num": null}, {"href": "2-1/AAD/maxcut-exercises-solutions.pdf", "title": "Max-cut exercises with solutions", "kind": "pdf", "over": "PDF", "meta": "9 pages", "num": null}, {"href": "2-1/AAD/max-flow-max-cut.pdf", "title": "Max-flow / min-cut", "kind": "pdf", "over": "PDF", "meta": "27 pages", "num": null}, {"href": "2-1/AAD/max-flow-max-cut-one-hour.pdf", "title": "Max-flow / min-cut in one hour", "kind": "pdf", "over": "PDF", "meta": "7 pages", "num": null}, {"href": "2-1/AAD/midsem-question-map.pdf", "title": "Mid-sem question map", "kind": "pdf", "over": "PDF", "meta": "17 pages", "num": null}, {"href": "2-1/AAD/midsem-study-guide.pdf", "title": "Mid-sem study guide", "kind": "pdf", "over": "PDF", "meta": "79 pages", "num": null}, {"href": "2-1/AAD/np-reductions-question-map.pdf", "title": "NP reductions question map", "kind": "pdf", "over": "PDF", "meta": "7 pages", "num": null}, {"href": "2-1/AAD/AAD-post-midsem-study-guide.pdf", "title": "Post-mid-sem study guide", "kind": "pdf", "over": "PDF", "meta": "72 pages", "num": null}, {"href": "2-1/AAD/randomized-approximation-quiz-practice.pdf", "title": "Randomized and approximation algorithms: quiz practice", "kind": "pdf", "over": "PDF", "meta": "15 pages", "num": null}, {"href": "2-1/AAD/hashing-question-map.pdf", "title": "Randomized hashing question map", "kind": "pdf", "over": "PDF", "meta": "7 pages", "num": null}]}, {"id": "DnA", "code": "DnA", "name": "Data and Applications", "term": "Monsoon · Year 2", "items": [{"href": "2-1/DnA/01-databases.html", "title": "Databases and Database Users", "kind": "guide", "over": "Topic 1", "meta": "Interactive guide", "num": 1}, {"href": "2-1/DnA/02-data-models-er.html", "title": "Data Models, Architecture and the ER Model", "kind": "guide", "over": "Topic 2", "meta": "Interactive guide", "num": 2}, {"href": "2-1/DnA/03-er-eer.html", "title": "ER and EER Modelling", "kind": "guide", "over": "Topic 3", "meta": "Interactive guide", "num": 3}, {"href": "2-1/DnA/04-relational-model.html", "title": "The Relational Data Model and ER/EER-to-Relational Mapping", "kind": "guide", "over": "Topic 4", "meta": "Interactive guide", "num": 4}, {"href": "2-1/DnA/05-normalization.html", "title": "Functional Dependencies and Normalization", "kind": "guide", "over": "Topic 5", "meta": "Interactive guide", "num": 5}, {"href": "2-1/DnA/06-relational-algebra.html", "title": "Relational Algebra", "kind": "guide", "over": "Topic 6", "meta": "Interactive guide", "num": 6}, {"href": "2-1/DnA/07-tuple-relational-calculus.html", "title": "Tuple Relational Calculus", "kind": "guide", "over": "Topic 7", "meta": "Interactive guide", "num": 7}, {"href": "2-1/DnA/08-sql.html", "title": "SQL", "kind": "guide", "over": "Topic 8", "meta": "Interactive guide", "num": 8}, {"href": "2-1/DnA/01-databases.pdf", "title": "Databases and database users (older PDF)", "kind": "pdf", "over": "PDF", "meta": "25 pages", "num": null}, {"href": "2-1/DnA/dna-endsem-question-map.pdf", "title": "End-sem question map", "kind": "pdf", "over": "PDF", "meta": "13 pages", "num": null}, {"href": "2-1/DnA/phase4_eval_prep.pdf", "title": "Phase 4 evaluation prep", "kind": "pdf", "over": "PDF", "meta": "13 pages", "num": null}, {"href": "2-1/DnA/sql-guide.pdf", "title": "SQL guide", "kind": "pdf", "over": "PDF", "meta": "14 pages", "num": null}]}, {"id": "History", "code": "HIST", "name": "History", "term": "Monsoon · Year 2", "items": [{"href": "2-1/History/quiz2_model_answers.pdf", "title": "Quiz 2 model answers", "kind": "pdf", "over": "PDF", "meta": "8 pages", "num": null}, {"href": "2-1/History/quiz2_prep.pdf", "title": "Quiz 2 prep", "kind": "pdf", "over": "PDF", "meta": "27 pages", "num": null}]}, {"id": "PnS", "code": "PnS", "name": "Probability and Statistics", "term": "Monsoon · Year 2", "items": [{"href": "2-1/PnS/alternative_source_list.pdf", "title": "Alternative source list", "kind": "pdf", "over": "PDF", "meta": "1 pages", "num": null}, {"href": "2-1/PnS/gaussian_iterated_expectation_sources.pdf", "title": "Gaussian and iterated expectation sources", "kind": "pdf", "over": "PDF", "meta": "1 pages", "num": null}, {"href": "2-1/PnS/PnS_L21-L25_Question_List.pdf", "title": "Lectures 21–25 question list", "kind": "pdf", "over": "PDF", "meta": "6 pages", "num": null}, {"href": "2-1/PnS/mgf_questions_solutions.pdf", "title": "MGF questions with solutions", "kind": "pdf", "over": "PDF", "meta": "13 pages", "num": null}, {"href": "2-1/PnS/midsem_question_bank.pdf", "title": "Mid-sem question bank", "kind": "pdf", "over": "PDF", "meta": "6 pages", "num": null}, {"href": "2-1/PnS/midsem_source_list.pdf", "title": "Mid-sem source list", "kind": "pdf", "over": "PDF", "meta": "2 pages", "num": null}, {"href": "2-1/PnS/quiz2_question_list.pdf", "title": "Quiz 2 question list", "kind": "pdf", "over": "PDF", "meta": "8 pages", "num": null}]}];
+const P={
+  back:'m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z',
+  guide:'M240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h480q33 0 56.5 23.5T800-800v640q0 33-23.5 56.5T720-80H240Zm0-80h480v-640h-80v280l-100-60-100 60v-280H240v640Z',
+  pdf:'M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520Z'
+};
+const ic=n=>'<svg class="ic" viewBox="0 -960 960 960" aria-hidden="true"><path d="'+P[n]+'"/></svg>';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const app=document.getElementById('app');
+
+function home(){
+  const n=DATA.reduce((a,c)=>a+c.items.length,0);
+  return '<section class="hero"><h1 class="mark">cwd</h1><p class="tag">Study guides, question maps and solved papers</p></section>'
+    +'<div class="head"><h2>Courses</h2><span>'+DATA.length+' courses · '+n+' files</span></div>'
+    +'<div class="grid">'+DATA.map(c=>'<a class="card ripple" href="#/'+encodeURIComponent(c.id)+'">'
+      +'<span class="over">'+esc(c.code)+'</span><span class="title">'+esc(c.name)+'</span>'
+      +'<span class="meta">'+esc(c.term)+' · '+c.items.length+' files</span></a>').join('')+'</div>';
+}
+function card(it){
+  const over=it.kind==='guide'?(it.num?'<span class="num">'+it.num+'</span>':ic('guide'))+esc(it.over):ic('pdf')+'PDF';
+  return '<a class="card ripple '+it.kind+'" href="'+encodeURI(it.href)+'"'+(it.kind==='pdf'?' target="_blank" rel="noopener"':'')+'>'
+    +'<span class="over">'+over+'</span><span class="title">'+esc(it.title)+'</span><span class="meta">'+esc(it.meta)+'</span></a>';
+}
+function course(c){
+  const g=c.items.filter(i=>i.kind==='guide'), p=c.items.filter(i=>i.kind!=='guide');
+  let h='<div class="top"><a class="back ripple" href="#/">'+ic('back')+'All courses</a></div>'
+    +'<header class="ph"><div class="over">'+esc(c.code)+' · '+esc(c.term)+'</div><h1>'+esc(c.name)+'</h1><p>'+c.items.length+' files</p></header>';
+  if(g.length) h+='<div class="head"><h2>Chapters</h2><span>'+g.length+' interactive guides</span></div><div class="grid">'+g.map(card).join('')+'</div>';
+  if(p.length) h+='<div class="head"><h2>'+(g.length?'More material':'Files')+'</h2><span>'+p.length+' PDFs</span></div><div class="grid">'+p.map(card).join('')+'</div>';
+  return h;
+}
+function route(){
+  const id=decodeURIComponent(location.hash.replace(/^#\/?/,''));
+  const c=DATA.find(x=>x.id===id);
+  app.innerHTML='<div class="view">'+(c?course(c):home())+'</div>';
+  document.title=c?c.code+' · cwd':'cwd';
+  window.scrollTo(0,0);
+}
+addEventListener('hashchange',route); route();
+document.addEventListener('pointerdown',e=>{ const t=e.target.closest('.ripple'); if(!t) return;
+  const r=t.getBoundingClientRect(), d=Math.max(r.width,r.height)*2.2, s=document.createElement('span');
+  s.className='rip'; s.style.cssText='width:'+d+'px;height:'+d+'px;left:'+(e.clientX-r.left-d/2)+'px;top:'+(e.clientY-r.top-d/2)+'px';
+  t.appendChild(s); setTimeout(()=>s.remove(),650); });
+</script>
+</body>
+</html>
