@@ -84,7 +84,7 @@ const app=document.getElementById('app');
 
 function home(){
   const n=DATA.reduce((a,c)=>a+c.items.length,0);
-  return '<section class="hero"><h1 class="mark">cwd</h1><p class="tag">Study guides, question maps and solved papers</p></section>'
+  return '<section class="hero"><h1 class="mark">cwd</h1><p class="tag">Current Working Directory for what you&rsquo;re currently working on</p></section>'
     +'<div class="head"><h2>Courses</h2><span>'+DATA.length+' courses · '+n+' files</span></div>'
     +'<div class="grid">'+DATA.map(c=>'<a class="card ripple" href="#/'+encodeURIComponent(c.id)+'">'
       +'<span class="over">'+esc(c.code)+'</span><span class="title">'+esc(c.name)+'</span>'
