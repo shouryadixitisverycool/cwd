@@ -91,7 +91,7 @@ function home(){
       +'<span class="meta">'+esc(c.term)+' · '+c.items.length+' files</span></a>').join('')+'</div>';
 }
 function card(it){
-  const over=it.kind==='guide'?(it.num?'<span class="num">'+it.num+'</span>':ic('guide'))+esc(it.over):ic('pdf')+'PDF';
+  const over=it.kind==='guide'?(it.num&&/^Topic/.test(it.over)?'<span class="num">'+it.num+'</span>':ic('guide'))+esc(it.over):ic('pdf')+'PDF';
   return '<a class="card ripple '+it.kind+'" href="'+encodeURI(it.href)+'"'+(it.kind==='pdf'?' target="_blank" rel="noopener"':'')+'>'
     +'<span class="over">'+over+'</span><span class="title">'+esc(it.title)+'</span><span class="meta">'+esc(it.meta)+'</span></a>';
 }

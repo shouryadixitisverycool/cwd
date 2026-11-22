@@ -40,6 +40,8 @@ TITLES = {
     'PnS/quiz2_question_list.pdf': 'Quiz 2 question list',
 }
 
+ORDER = {'AAD/midsem-question-map.html': 1, 'AAD/endsem-question-map.html': 2}   # guide order within a course
+
 def pdf_pages(p):
     try:
         out = subprocess.run(['pdfinfo', p], capture_output=True, text=True).stdout
@@ -65,8 +67,10 @@ for sem in sorted(d for d in os.listdir(ROOT) if re.fullmatch(r'\d-\d', d)):
                 m = re.match(r'DnA (\d+) · (.*)', title)
                 kind, num = 'Guide', None
                 if m: num, title = int(m.group(1)), m.group(2)
+                else: title = re.sub(r'^' + re.escape(course) + r'\s+', '', title)
+                over = 'Topic %d' % num if num else ('Question map' if 'question map' in title.lower() else 'Guide')
                 items.append({'href': sem + '/' + rel, 'title': TITLES.get(rel, title), 'kind': 'guide',
-                              'over': 'Topic %d' % num if num else 'Guide', 'meta': 'Interactive guide', 'num': num})
+                              'over': over, 'meta': 'Interactive guide', 'num': num or ORDER.get(rel)})
             elif f.endswith('.pdf'):
                 n = pdf_pages(path)
                 items.append({'href': sem + '/' + rel, 'title': TITLES.get(rel, pretty(f)), 'kind': 'pdf',
