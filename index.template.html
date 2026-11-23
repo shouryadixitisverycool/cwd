@@ -100,6 +100,7 @@ function course(c){
   let h='<div class="top"><a class="back ripple" href="#/">'+ic('back')+'All courses</a></div>'
     +'<header class="ph"><div class="over">'+esc(c.code)+' · '+esc(c.term)+'</div><h1>'+esc(c.name)+'</h1><p>'+c.items.length+' files</p></header>';
   if(g.length) h+='<div class="head"><h2>Chapters</h2><span>'+g.length+' interactive guides</span></div><div class="grid">'+g.map(card).join('')+'</div>';
+  if(c.report) h+='<section class="report">'+c.report+'</section>';
   if(p.length) h+='<div class="head"><h2>'+(g.length?'More material':'Files')+'</h2><span>'+p.length+' PDFs</span></div><div class="grid">'+p.map(card).join('')+'</div>';
   return h;
 }

@@ -59,12 +59,16 @@ for sem in sorted(d for d in os.listdir(ROOT) if re.fullmatch(r'\d-\d', d)):
         if not os.path.isdir(cdir): continue
         code, name = COURSES.get(course, (course, course))
         items = []
+        report = None
         for f in sorted(os.listdir(cdir)):
             path = os.path.join(cdir, f); rel = course + '/' + f
+            if f == '_report.html':   # an HTML fragment shown on the course page itself, not listed as a file
+                report = open(path).read(); continue
+            if f.startswith('_'): continue
             if f.endswith('.html'):
                 t = re.search(r'<title>(.*?)</title>', open(path, errors='ignore').read(4000), re.S)
                 title = html.unescape(t.group(1).strip()) if t else pretty(f)
-                m = re.match(r'DnA (\d+) · (.*)', title)
+                m = re.match(r'(?:DnA|PnS) (\d+) · (.*)', title)
                 kind, num = 'Guide', None
                 if m: num, title = int(m.group(1)), m.group(2)
                 else: title = re.sub(r'^' + re.escape(course) + r'\s+', '', title)
@@ -73,10 +77,11 @@ for sem in sorted(d for d in os.listdir(ROOT) if re.fullmatch(r'\d-\d', d)):
                               'over': over, 'meta': 'Interactive guide', 'num': num or ORDER.get(rel)})
             elif f.endswith('.pdf'):
                 n = pdf_pages(path)
-                items.append({'href': sem + '/' + rel, 'title': TITLES.get(rel, pretty(f)), 'kind': 'pdf',
-                              'over': 'PDF', 'meta': '%d pages' % n if n else 'PDF', 'num': None})
-        items.sort(key=lambda x: (x['kind'] != 'guide', x['num'] or 0, x['title'].lower()))
-        data.append({'id': course, 'code': code, 'name': name, 'term': SEMESTERS.get(sem, sem), 'items': items})
+                q = re.match(r'(\d\d)-.*-questions\.pdf$', f)   # printable question list that goes with topic guide NN
+                items.append({'href': sem + '/' + rel, 'title': TITLES.get(rel, 'Topic %d question list (printable)' % int(q.group(1)) if q else pretty(f)),
+                              'kind': 'pdf', 'over': 'PDF', 'meta': '%d pages' % n if n else 'PDF', 'num': int(q.group(1)) if q else None})
+        items.sort(key=lambda x: (x['kind'] != 'guide', x['num'] if x['num'] is not None else (0 if x['kind'] == 'guide' else 999), x['title'].lower()))
+        data.append({'id': course, 'code': code, 'name': name, 'term': SEMESTERS.get(sem, sem), 'items': items, 'report': report})
 
 # a "back to the course" link at the top of every interactive guide's drawer (idempotent)
 BACK = '''<!--cwd-back--><style>.nav a.cwd-back{min-height:40px;margin:0 0 8px;color:var(--primary);font-weight:500}</style>
@@ -88,7 +93,7 @@ for c in data:
     for it in c['items']:
         if it['kind'] != 'guide': continue
         path = os.path.join(ROOT, it['href']); h = open(path).read()
-        h = re.sub(r'<!--cwd-back-->.*?</script>', '', h, flags=re.S)
+        h = re.sub(r'<!--cwd-back-->.*?</script>\n?', '', h, flags=re.S)
         i = h.rindex('</body>')
         open(path, 'w').write(h[:i] + BACK % (c['id'], html.escape(c['name'])) + '\n' + h[i:])
 
