@@ -38,6 +38,7 @@ TITLES = {
     'PnS/midsem_source_list.pdf': 'Mid-sem source list',
     'PnS/PnS_L21-L25_Question_List.pdf': 'Lectures 21–25 question list',
     'PnS/quiz2_question_list.pdf': 'Quiz 2 question list',
+    'PnS/endsem-paper-plan-questions.pdf': 'End-sem paper plan question list (printable)',
 }
 
 ORDER = {'AAD/midsem-question-map.html': 1, 'AAD/endsem-question-map.html': 2}   # guide order within a course
